@@ -12,7 +12,7 @@ var express = require('express')
 var app = express();
 
 // all environments
-var port = process.env.OPENSHIFT_NODEJS_PORT ||  process.env.OPENSHIFT_INTERNAL_PORT || 8080;  
+var port = process.env.OPENSHIFT_NODEJS_PORT ||  process.env.OPENSHIFT_INTERNAL_PORT || 3000;  
 var ipaddr = process.env.OPENSHIFT_NODEJS_IP || process.env.OPENSHIFT_INTERNAL_IP;
 app.set('views', __dirname + '/views');
 app.set('view engine', 'html');
