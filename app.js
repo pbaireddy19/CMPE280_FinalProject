@@ -10,12 +10,14 @@ var express = require('express')
   , path = require('path');
 
 var app = express();
+var sql = require('mysql');
+var poolObject = require('./routes/connectionpooling');
 
 // all environments
-var port = process.env.OPENSHIFT_NODEJS_PORT ||  process.env.OPENSHIFT_INTERNAL_PORT || 3000;  
+var port = process.env.OPENSHIFT_NODEJS_PORT ||  process.env.OPENSHIFT_INTERNAL_PORT || 8080;  
 var ipaddr = process.env.OPENSHIFT_NODEJS_IP || process.env.OPENSHIFT_INTERNAL_IP;
 app.set('views', __dirname + '/views');
-app.set('view engine', 'html');
+app.set('view engine', 'ejs');
 app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.bodyParser());
@@ -29,6 +31,17 @@ if ('development' == app.get('env')) {
 }
 
 app.get('/', routes.index);
+app.get('/dashboard', routes.dashboard);
+app.get('/chart', routes.chart);
+app.get('/uploadchart', routes.uploadchart);
 app.get('/users', user.list);
 
+exports.poolObject = poolObject;
+exports.sql = sql;
+//creating pool of Database connections
+poolObject.initializepool(10);
+
+
+
 http.createServer(app).listen(port,ipaddr);
+
