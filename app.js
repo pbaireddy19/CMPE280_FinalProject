@@ -30,6 +30,7 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
+
 app.get('/', routes.index);
 app.get('/dashboard', routes.dashboard);
 app.get('/chart', routes.chart);
@@ -44,6 +45,6 @@ poolObject.initializepool(10);
 
 
 http.createServer(app).listen(port,ipaddr, function(){
-  console.log('Express server listening on port ' + app.get('port'));
+  console.log('Express server listening on port ' +port);
 });
 

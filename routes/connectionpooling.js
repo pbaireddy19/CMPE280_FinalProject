@@ -15,7 +15,7 @@ function connect()
 			user     : process.env.OPENSHIFT_MYSQL_DB_USERNAME,
 			password : process.env.OPENSHIFT_MYSQL_DB_PASSWORD,
 			port: process.env.OPENSHIFT_MYSQL_DB_PORT,
-			database: OPENSHIFT_GEAR_NAME
+			database: process.env.OPENSHIFT_GEAR_NAME
 		});
 
 		connection.connect();

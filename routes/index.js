@@ -68,6 +68,7 @@ exports.dashboard = function(req, res){
 	
 	exports.mark = function(req, res){
 		
+		console.log("******" + req.param("radioGroup"));
 		connection = server.poolObject.getConnection();
 		var result = "";
 		var rowCount = 0;
@@ -76,7 +77,42 @@ exports.dashboard = function(req, res){
 		
 		try
 		{
-			var query = "Select * from networkcoverage";
+			var query;
+			if((req.param("radioGroup") == undefined) || req.param("radioGroup")=="option6")
+			{
+				query= "Select * from networkcoverage";
+			}
+			
+			else
+			{
+				var carrier;
+			if(req.param("radioGroup") == "option1")
+				{
+					carrier="T-Mobile";
+				}
+			else if(req.param("radioGroup") == "option2")
+			{
+				carrier="AT&T";
+			}
+			else if(req.param("radioGroup") == "option3")
+			{
+				carrier="Verizon";
+			}
+			else if(req.param("radioGroup") == "option4")
+			{
+				carrier="MetroPCS";
+			}
+			else if(req.param("radioGroup") == "option5")
+			{
+				carrier="CricKet";
+			}
+				 
+				query= "Select * from networkcoverage where carrier='" + carrier +  "'";
+				console.log(query);
+			}
+			
+			
+			//query= "Select * from networkcoverage";
 			if(connection != null)
 			{
 				connection.query(query,function(error,rows,fields){
@@ -98,30 +134,30 @@ exports.dashboard = function(req, res){
 							for(var i=0;i<rows.length;i++)
 							{
 								
-								if((rows[i].carrier).localeCompare("T-Mobile"))
+								if((rows[i].carrier)=="T-Mobile")
 				           		 {
 				                 	
 				                 	temp1.push(rows[i].signalStrength);
 				                 }
-				                 if((rows[i].carrier).localeCompare("ATT"))
+				                 if((rows[i].carrier)=="AT&T")
 				                 {
 				                	 
 				                	 temp2.push(rows[i].signalStrength);
 				                 }
-				                 if((rows[i].carrier).localeCompare("cricKet"))
+				                 if((rows[i].carrier)=="cricKet")
 				                 {
 				                	
 				                	 temp5.push(rows[i].signalStrength);
 				                 }
-				                 if((rows[i].carrier).localeCompare("Verizon"))
+				                 if((rows[i].carrier)=="Verizon")
 				                 {
 				                	 
 				                	 temp3.push(rows[i].signalStrength);
 				                 }
-				                 if((rows[i].carrier).localeCompare("MetroPCS"))
+				                 if((rows[i].carrier)=="MetroPCS")
 				                 {
 				                	 
-				                	 temp5.push(rows[i].signalStrength);
+				                	 temp4.push(rows[i].signalStrength);
 				                	 
 				                 }
 							}
@@ -157,7 +193,10 @@ exports.dashboard = function(req, res){
 							sigMap.push((S5/temp5.length));
 							
 							console.log(">>>>>" + sigMap[0]);
-							
+							console.log(">>>>>" + sigMap[1]);
+							console.log(">>>>>" + sigMap[2]);
+							console.log(">>>>>" + sigMap[3]);
+							console.log(">>>>>" + sigMap[4]);
 							
 							
 
