@@ -34,7 +34,7 @@ app.get('/', routes.index);
 app.get('/dashboard', routes.dashboard);
 app.get('/chart', routes.chart);
 app.get('/uploadchart', routes.uploadchart);
-app.get('/users', user.list);
+app.get('/mark', routes.mark);
 
 exports.poolObject = poolObject;
 exports.sql = sql;
@@ -43,5 +43,7 @@ poolObject.initializepool(10);
 
 
 
-http.createServer(app).listen(port,ipaddr);
+http.createServer(app).listen(port,ipaddr, function(){
+  console.log('Express server listening on port ' + app.get('port'));
+});
 

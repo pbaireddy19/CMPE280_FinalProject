@@ -65,6 +65,138 @@ exports.dashboard = function(req, res){
 
 	};
 	
+	
+	exports.mark = function(req, res){
+		
+		connection = server.poolObject.getConnection();
+		var result = "";
+		var rowCount = 0;
+		var data;
+		
+		
+		try
+		{
+			var query = "Select * from networkcoverage";
+			if(connection != null)
+			{
+				connection.query(query,function(error,rows,fields){
+					if (error)
+					{
+						console.log("ERROR: " + error.message);
+					}
+					else
+					{
+						if(rows.length!==0)
+						{
+							
+							var temp1=[];
+							var temp2=[];
+							var temp3=[];
+							var temp4=[];
+							var temp5=[];
+							
+							for(var i=0;i<rows.length;i++)
+							{
+								
+								if((rows[i].carrier).localeCompare("T-Mobile"))
+				           		 {
+				                 	
+				                 	temp1.push(rows[i].signalStrength);
+				                 }
+				                 if((rows[i].carrier).localeCompare("ATT"))
+				                 {
+				                	 
+				                	 temp2.push(rows[i].signalStrength);
+				                 }
+				                 if((rows[i].carrier).localeCompare("cricKet"))
+				                 {
+				                	
+				                	 temp5.push(rows[i].signalStrength);
+				                 }
+				                 if((rows[i].carrier).localeCompare("Verizon"))
+				                 {
+				                	 
+				                	 temp3.push(rows[i].signalStrength);
+				                 }
+				                 if((rows[i].carrier).localeCompare("MetroPCS"))
+				                 {
+				                	 
+				                	 temp5.push(rows[i].signalStrength);
+				                	 
+				                 }
+							}
+							
+							var S1 =0,S2=0,S3=0,S4=0,S5=0;
+							for(i=0;i<temp1.length;i++)
+							{
+								S1 = S1+temp1[i];
+							}
+							for(i=0;i<temp2.length;i++)
+							{
+								S2 = S2+temp2[i];
+							}
+							for(i=0;i<temp3.length;i++)
+							{
+								S3 = S3+temp3[i];
+							}
+							for(i=0;i<temp4.length;i++)
+							{
+								S4 = S4+temp4[i];
+							}
+							for(i=0;i<temp5.length;i++)
+							{
+								S5 = S5+temp5[i];
+							}
+							
+							var sigMap = [];
+							
+							sigMap.push((S1/temp1.length));
+							sigMap.push((S2/temp2.length));
+							sigMap.push((S3/temp3.length));
+							sigMap.push((S4/temp4.length));
+							sigMap.push((S5/temp5.length));
+							
+							console.log(">>>>>" + sigMap[0]);
+							
+							
+							
+
+							//console.log(rows);
+							res.render('markerMap',{networkDetails:rows,sigMap:sigMap, title: 'CMDSA-Marker Map' });
+						}
+						else
+						{
+							var err="Invalid UerName/Password";
+							console.log("returned 0 rows");
+							//callback(err);
+						}
+					}
+
+				});
+
+			}
+			else
+			{
+				console.log('Unable to get the Database Connection');
+			}
+		}
+		catch (e)
+		{
+			console.log("Error:" + e);
+		}
+		finally
+		{
+			if(connection != null)
+			{
+				server.poolObject.returnConnection(connection);
+			}
+		}
+		
+
+		};
+	
+	
+	
 	exports.chart = function(req, res){
 		connection = server.poolObject.getConnection();
 		var result = "";
@@ -94,30 +226,70 @@ exports.dashboard = function(req, res){
 							var T3=[];
 							var T4=[];
 							var T5=[];
+							
+							var temp1=[];
+							var temp2=[];
+							var temp3=[];
+							var temp4=[];
+							var temp5=[];
+							
 							for(var i=0;i<rows.length;i++)
 							{
 								
 								if((rows[i].carrier).localeCompare("T-Mobile"))
 				           		 {
 				                 	T1.push(rows[i].downloadSpeed);
+				                 	temp1.push(rows[i].signalStrength);
 				                 }
 				                 if((rows[i].carrier).localeCompare("ATT"))
 				                 {
 				                	 T2.push(rows[i].downloadSpeed);
+				                	 temp2.push(rows[i].signalStrength);
 				                 }
 				                 if((rows[i].carrier).localeCompare("cricKet"))
 				                 {
 				                	 T5.push(rows[i].downloadSpeed);
+				                	 temp5.push(rows[i].signalStrength);
 				                 }
 				                 if((rows[i].carrier).localeCompare("Verizon"))
 				                 {
 				                	 T3.push(rows[i].downloadSpeed);
+				                	 temp3.push(rows[i].signalStrength);
 				                 }
 				                 if((rows[i].carrier).localeCompare("MetroPCS"))
 				                 {
 				                	 T4.push(rows[i].downloadSpeed);
+				                	 temp5.push(rows[i].signalStrength);
+				                	 
 				                 }
 							}
+							
+							var S1 =0,S2=0,S3=0,S4=0,S5=0;
+							for(i=0;i<temp1.length;i++)
+							{
+								S1 = S1+temp1[i];
+							}
+							for(i=0;i<temp2.length;i++)
+							{
+								S2 = S2+temp2[i];
+							}
+							for(i=0;i<temp3.length;i++)
+							{
+								S3 = S3+temp3[i];
+							}
+							for(i=0;i<temp4.length;i++)
+							{
+								S4 = S4+temp4[i];
+							}
+							for(i=0;i<temp5.length;i++)
+							{
+								S5 = S5+temp5[i];
+							}
+							
+							
+							
+							
+							
 							var avgT1 =0;
 							for(i=0;i<T1.length;i++)
 							{
@@ -144,13 +316,23 @@ exports.dashboard = function(req, res){
 								avgT5 = avgT5+T5[i];
 							}
 							var map = [];
+							var sigMap = [];
+							
+							sigMap.push((S1/temp1.length));
+							sigMap.push((S2/temp2.length));
+							sigMap.push((S3/temp3.length));
+							sigMap.push((S4/temp4.length));
+							sigMap.push((S5/temp5.length));
+							
+							
+							
 							map.push((avgT1 / T1.length));
 							map.push((avgT2 / T2.length));
 							map.push((avgT3 / T3.length));
 							map.push((avgT4 / T4.length));
 							map.push((avgT5 / T5.length));
 							
-							res.render('chart',{networkDetails:map, title: 'CMDSA-Dashboard' });
+							res.render('chart',{networkDetails:map,signalStrength:sigMap, title: 'CMDSA-Dashboard' });
 						}
 						else
 						{
