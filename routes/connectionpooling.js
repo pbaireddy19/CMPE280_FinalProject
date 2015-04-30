@@ -11,11 +11,11 @@ function connect()
 	try
 	{
 		var connection = server.sql.createConnection({
-			host     : 'localhost',
-			user     : 'root',
-			password : 'root',
-			port: '3306',
-			database: 'testdb'
+			host     : process.env.OPENSHIFT_MYSQL_DB_HOST,
+			user     : process.env.OPENSHIFT_MYSQL_DB_USERNAME,
+			password : process.env.OPENSHIFT_MYSQL_DB_PASSWORD,
+			port: process.env.OPENSHIFT_MYSQL_DB_PORT,
+			database: OPENSHIFT_GEAR_NAME
 		});
 
 		connection.connect();
