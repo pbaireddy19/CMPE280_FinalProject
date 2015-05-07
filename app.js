@@ -36,6 +36,7 @@ app.get('/dashboard', routes.dashboard);
 app.get('/chart', routes.chart);
 app.get('/uploadchart', routes.uploadchart);
 app.get('/mark', routes.mark);
+app.get('/networkusers', routes.users);
 
 exports.poolObject = poolObject;
 exports.sql = sql;

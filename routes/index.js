@@ -520,3 +520,102 @@ exports.dashboard = function(req, res){
 			}
 			
 			};
+			exports.users = function(req, res){
+				
+				connection = server.poolObject.getConnection();
+				var result = "";
+				var rowCount = 0;
+				var data;
+				
+				
+				try
+				{
+					var query = "Select * from networkcoverage";
+					if(connection != null)
+					{
+						connection.query(query,function(error,rows,fields){
+							if (error)
+							{
+								console.log("ERROR: " + error.message);
+							}
+							else
+							{
+								if(rows.length!==0)
+								{
+
+									console.log(rows);
+									
+									var map=[];
+									
+									
+									var count1=0;
+									var count2=0;
+									var count3=0;
+									var count4=0;
+									var count5=0;
+									
+									for(var i=0;i<rows.length;i++)
+									{
+										
+										if((rows[i].carrier).localeCompare("T-Mobile"))
+						           		 {
+						                 	count1=count1+1;
+						                 }
+						                 if((rows[i].carrier).localeCompare("ATT"))
+						                 {
+						                	 count2=count2+1;
+						                 }
+						                 if((rows[i].carrier).localeCompare("cricKet"))
+						                 {
+						                	 count5=count5+1;
+						                 }
+						                 if((rows[i].carrier).localeCompare("Verizon"))
+						                 {
+						                	 count3=count3+1;
+						                 }
+						                 if((rows[i].carrier).localeCompare("MetroPCS"))
+						                 {
+						                	 count4=count4+1;
+						                	 
+						                 }
+									}
+									
+									map.push(count1);
+									map.push(count2);
+									map.push(count3);
+									map.push(count4);
+									map.push(count5);
+									
+									
+									res.render('piechart',{networkDetails:map, title: 'CMDSA-Dashboard' });
+								}
+								else
+								{
+									var err="Invalid UerName/Password";
+									console.log("returned 0 rows");
+									//callback(err);
+								}
+							}
+
+						});
+
+					}
+					else
+					{
+						console.log('Unable to get the Database Connection');
+					}
+				}
+				catch (e)
+				{
+					console.log("Error:" + e);
+				}
+				finally
+				{
+					if(connection != null)
+					{
+						server.poolObject.returnConnection(connection);
+					}
+				}
+				
+
+				};
